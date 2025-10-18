@@ -22,38 +22,40 @@
         <div class="details">
           <div class="col">
             <img src="images/images/humidity.png" />
-            <idv>
+            <div>
               <p class="humidity">50%</p>
               <p>Humidity</p>
-            </idv>
+            </div>
           </div>
           <div class="col">
             <img src="images/images/wind.png" />
-            <idv>
+            <div>
               <p class="wind">15 km/h</p>
               <p>Wind Speed</p>
-            </idv>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      const apiKey = "543e65c92b946dfae50f0e215c5b386a";
-      const apiUrl =
-        "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+      // The API key is now securely handled by the Node.js backend.
+      // We call the backend service running on port 3000.
+      const apiUrl = "http://localhost:3000/api/weather?city=";
+
       const searchBox = document.querySelector(".search input");
       const searchBtn = document.querySelector(".search button");
       const weatherIcon = document.querySelector(".weather-icon");
+
       async function checkWeather(city) {
-        const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+        // Fetch data from our local, secure proxy server
+        const response = await fetch(apiUrl + city);
+
         if (response.status == 404) {
           document.querySelector(".error").style.display = "block";
           document.querySelector(".weather").style.display = "none";
         } else {
           var data = await response.json();
-
-          console.log(data);
 
           document.querySelector(".city").innerHTML = data.name;
           document.querySelector(".temp").innerHTML =
@@ -61,6 +63,7 @@
           document.querySelector(".humidity").innerHTML =
             data.main.humidity + "%";
           document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+
           if (data.weather[0].main == "Clouds") {
             weatherIcon.src = "images/images/clouds.png";
           } else if (data.weather[0].main == "Clear") {

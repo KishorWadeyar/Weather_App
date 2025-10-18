@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: weather_backend
+    ports:
+      - "3000:3000" # Map host port 3000 to container port 3000
+    env_file:
+      - .env # Load the secret API key from the .env file
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: weather_frontend
+    # Map host port 8080 to container port 80 (where Nginx runs)
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend # Ensure the backend is up first
+    restart: always
